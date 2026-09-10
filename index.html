@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sector 37 — Melbourne Delegation, 20–25 September 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDF0EA;
+  --surface:#FFFFFF;
+  --ink:#15241B;
+  --ink-soft:#3E5147;
+  --muted:#6E8074;
+  --rule:#CFD8CB;
+  --rule-strong:#A9B7A7;
+  --grid:#1F4E5F;
+  --canola:#E3B23C;
+  --canola-deep:#A87A0C;
+  --confirmed:#2F6B4F;
+  --tentative:#A87A0C;
+  --optional:#6E8074;
+  --alert:#9B3D2E;
+  --shadow:0 1px 0 var(--rule);
+  --r:3px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.5;
+}
+h1,h2,h3,.num,th,button,.tab,.chip{font-family:"Archivo","Segoe UI",system-ui,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- masthead ---------- */
+header.mast{background:var(--ink);color:#EDF0EA;padding:26px 0 0}
+.mast h1{
+  font-size:clamp(24px,3.4vw,36px);font-weight:700;letter-spacing:-.02em;
+  margin:0 0 4px;line-height:1.1
+}
+.mast .sub{color:#A9BFB0;font-size:15px;margin:0 0 20px;max-width:62ch}
+.mast .sub b{color:#E3B23C;font-weight:600}
+
+/* day strip = the hero */
+.strip{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:#2A3D31;border-top:1px solid #2A3D31}
+.strip button{
+  all:unset;cursor:pointer;background:#15241B;padding:12px 10px 14px;
+  display:flex;flex-direction:column;gap:6px;min-height:92px;position:relative
+}
+.strip button:focus-visible{outline:2px solid var(--canola);outline-offset:-2px}
+.strip .dow{font-size:11px;color:#8FA697;letter-spacing:.06em;font-family:"Archivo"}
+.strip .num{font-size:30px;font-weight:700;line-height:1;color:#EDF0EA;letter-spacing:-.03em}
+.strip .load{display:flex;gap:3px;margin-top:auto}
+.strip .load i{height:4px;flex:1;background:#3A5245;border-radius:2px}
+.strip .load i.on{background:var(--canola)}
+.strip button[aria-current="true"]{background:#22382B}
+.strip button[aria-current="true"] .num{color:var(--canola)}
+.strip .empty .num{color:#5E7466}
+
+/* ---------- toolbar ---------- */
+.bar{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--rule-strong)}
+.bar .wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:10px;padding-bottom:10px}
+.tabs{display:flex;gap:2px;background:var(--rule);padding:2px;border-radius:var(--r)}
+.tab{all:unset;cursor:pointer;padding:6px 14px;font-size:14px;font-weight:600;color:var(--ink-soft);border-radius:2px}
+.tab[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(21,36,27,.14)}
+.tab:focus-visible{outline:2px solid var(--grid)}
+.spacer{flex:1 1 auto}
+button.act{
+  all:unset;cursor:pointer;font-size:13px;font-weight:600;padding:7px 12px;border-radius:var(--r);
+  border:1px solid var(--rule-strong);color:var(--ink);background:var(--surface)
+}
+button.act:hover{border-color:var(--grid);color:var(--grid)}
+button.act:focus-visible{outline:2px solid var(--grid);outline-offset:1px}
+button.act.key{background:var(--ink);color:#EDF0EA;border-color:var(--ink)}
+button.act.key:hover{background:var(--grid);border-color:var(--grid);color:#fff}
+.saveNote{font-size:12px;color:var(--muted);min-width:120px}
+
+/* ---------- panels ---------- */
+main{padding:26px 0 80px}
+.panel[hidden]{display:none}
+h2.sec{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 10px;letter-spacing:.04em}
+
+/* ---------- running sheet ---------- */
+.day{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);margin-bottom:14px;overflow:hidden}
+.day > .head{display:flex;align-items:baseline;gap:12px;padding:14px 18px;border-bottom:1px solid var(--rule);background:#F6F8F4}
+.day > .head .num{font-size:26px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.day > .head .dow{font-size:15px;font-weight:600;color:var(--ink-soft)}
+.day > .head .tag{margin-left:auto;font-size:12px;color:var(--muted)}
+.slot{display:grid;grid-template-columns:118px 1fr;gap:0;border-bottom:1px solid var(--rule)}
+.slot:last-child{border-bottom:0}
+.slot .when{padding:14px 12px 14px 18px;border-right:1px solid var(--rule);background:#FBFCFA}
+.slot .when input{
+  width:100%;border:1px solid transparent;background:transparent;font:600 15px/1.3 "Archivo",sans-serif;
+  color:var(--ink);padding:2px 4px;border-radius:2px;font-variant-numeric:tabular-nums
+}
+.slot .when input:hover{border-color:var(--rule)}
+.slot .when input:focus{border-color:var(--grid);background:#fff;outline:none}
+.slot .when .sg{font-size:11px;color:var(--muted);padding-left:5px;margin-top:3px;font-variant-numeric:tabular-nums}
+.slot .what{padding:13px 18px}
+.slot .title{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.slot .title input.t{
+  flex:1 1 240px;min-width:0;border:1px solid transparent;background:transparent;
+  font:600 17px/1.35 "Archivo",sans-serif;color:var(--ink);padding:2px 4px;border-radius:2px
+}
+.slot .title input.t:hover{border-color:var(--rule)}
+.slot .title input.t:focus{border-color:var(--grid);background:#fff;outline:none}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:7px;font-size:13.5px;color:var(--ink-soft);align-items:center}
+.meta label{color:var(--muted);font-size:12px;margin-right:-9px}
+.meta input.m,.meta select.m{
+  border:1px solid transparent;background:transparent;font:400 13.5px/1.4 "Source Sans 3",sans-serif;
+  color:var(--ink-soft);padding:2px 4px;border-radius:2px;max-width:100%
+}
+.meta input.m{min-width:150px}
+.meta input.m:hover,.meta select.m:hover{border-color:var(--rule)}
+.meta input.m:focus,.meta select.m:focus{border-color:var(--grid);background:#fff;outline:none;color:var(--ink)}
+.status{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:99px;border:1px solid}
+.status.confirmed{color:var(--confirmed);border-color:#B4D2C1;background:#EEF6F1}
+.status.tentative{color:var(--tentative);border-color:#EBD49A;background:#FCF6E6}
+.status.optional{color:var(--optional);border-color:var(--rule);background:#F2F4F0}
+.status select{all:unset;cursor:pointer;font:inherit;color:inherit}
+.who{margin-top:9px;display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.chip{
+  font-size:12px;font-weight:500;background:#EEF2EC;border:1px solid var(--rule);
+  color:var(--ink-soft);padding:2px 8px;border-radius:99px
+}
+.chip.sg{background:#FCF6E6;border-color:#EBD49A;color:var(--canola-deep)}
+.chip.none{background:transparent;border-style:dashed;color:var(--muted)}
+.nofix{padding:22px 18px;color:var(--muted);font-style:italic}
+.note{padding:10px 18px 16px;font-size:13.5px;color:var(--muted);border-top:1px dashed var(--rule)}
+.note b{color:var(--ink-soft);font-weight:600}
+
+/* ---------- invitee register ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+.filters select,.filters input{
+  font:400 13.5px/1 "Source Sans 3",sans-serif;padding:7px 9px;border:1px solid var(--rule-strong);
+  border-radius:var(--r);background:var(--surface);color:var(--ink)
+}
+.filters input{min-width:190px}
+.count{font-size:13px;color:var(--muted);margin-left:auto}
+.tablewrap{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:1120px;font-size:14px}
+th{
+  text-align:left;font-size:11.5px;font-weight:600;color:var(--muted);padding:9px 8px;
+  border-bottom:1px solid var(--rule-strong);background:#F6F8F4;position:sticky;top:0;white-space:nowrap
+}
+td{border-bottom:1px solid var(--rule);padding:0;vertical-align:middle}
+tbody tr:hover{background:#FAFBF9}
+td input,td select{
+  width:100%;border:1px solid transparent;background:transparent;padding:9px 8px;
+  font:400 14px/1.35 "Source Sans 3",sans-serif;color:var(--ink);border-radius:0
+}
+td input::placeholder{color:#A9B7A7;font-style:italic}
+td input:hover,td select:hover{background:#F2F5F0}
+td input:focus,td select:focus{outline:none;background:#fff;box-shadow:inset 0 0 0 2px var(--grid)}
+td.sessions{padding:5px 8px;min-width:190px}
+details.sess summary{
+  cursor:pointer;font-size:12.5px;color:var(--grid);font-weight:600;list-style:none;padding:3px 0
+}
+details.sess summary::-webkit-details-marker{display:none}
+details.sess summary::before{content:"▸ ";color:var(--muted)}
+details.sess[open] summary::before{content:"▾ "}
+details.sess .list{padding:6px 0 4px;display:flex;flex-direction:column;gap:3px}
+details.sess label{display:flex;gap:6px;font-size:12.5px;color:var(--ink-soft);align-items:flex-start;line-height:1.3}
+details.sess input[type=checkbox]{width:auto;margin:2px 0 0;flex:none}
+.rsvp-called{color:var(--grid)}
+.rsvp-confirmed{color:var(--confirmed);font-weight:600}
+.rsvp-declined{color:var(--alert)}
+.rowdel{all:unset;cursor:pointer;color:#C6CFC3;font-size:15px;padding:0 10px;line-height:1}
+.rowdel:hover{color:var(--alert)}
+.rowdel:focus-visible{outline:2px solid var(--alert)}
+
+/* ---------- venues ---------- */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.vcard{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:14px 16px}
+.vcard h3{margin:0 0 3px;font-size:16.5px;font-weight:600;letter-spacing:-.01em}
+.vcard p{margin:0;font-size:13.5px;color:var(--muted)}
+.vcard .used{margin-top:9px;font-size:12px;color:var(--grid);font-weight:600}
+.vcard .unused{margin-top:9px;font-size:12px;color:var(--muted)}
+
+/* arrivals and departures */
+.travel{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:0;margin-bottom:16px;overflow:hidden}
+.travel h3{margin:0;padding:12px 18px;font-size:13px;font-weight:600;color:var(--muted);border-bottom:1px solid var(--rule);background:#F6F8F4}
+.travel table{min-width:0;font-size:14px}
+.travel th{position:static;background:transparent;border-bottom:1px solid var(--rule);padding:7px 18px}
+.travel td{padding:9px 18px;border-bottom:1px solid var(--rule)}
+.travel tr:last-child td{border-bottom:0}
+.travel .nm{font-weight:600;font-family:"Archivo",sans-serif}
+.travel .co{color:var(--muted);font-weight:400;font-size:13px}
+.travel .tbd{color:#A9B7A7;font-style:italic}
+.travel .hint{padding:11px 18px;font-size:13px;color:var(--muted)}
+
+/* open questions */
+.q{background:#FCF6E6;border:1px solid #EBD49A;border-radius:var(--r);padding:14px 18px;margin-bottom:16px}
+.q h3{margin:0 0 6px;font-size:14px;font-weight:600;color:var(--canola-deep)}
+.q ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-soft)}
+.q li{margin-bottom:3px}
+
+footer{border-top:1px solid var(--rule-strong);padding:16px 0 40px;font-size:12.5px;color:var(--muted)}
+
+@media (max-width:720px){
+  .strip{grid-template-columns:repeat(3,1fr)}
+  .slot{grid-template-columns:1fr}
+  .slot .when{border-right:0;border-bottom:1px solid var(--rule);display:flex;gap:10px;align-items:baseline;padding:10px 16px}
+  .slot .when .sg{margin-top:0}
+  .count{margin-left:0;width:100%}
+}
+@media print{
+  .bar,.strip,.rowdel,button.act{display:none!important}
+  body{background:#fff}
+  .panel[hidden]{display:block!important}
+  .day,.tablewrap,.vcard{break-inside:avoid}
+  input,select{border:0!important;background:transparent!important;-webkit-appearance:none;appearance:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <h1>Melbourne delegation programme</h1>
+    <p class="sub">Sector 37 · Sunday 20 to Friday 25 September 2026. All times Melbourne <b>AEST</b>; Singapore is two hours behind until daylight saving starts on 4 October. Four visitors: Kelvin, Ken, Leonard and Daniel. Times and venues are provisional — edit anything in place.</p>
+  </div>
+  <div class="strip" id="strip"></div>
+</header>
+
+<div class="bar">
+  <div class="wrap">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-run" aria-selected="true" aria-controls="p-run">Running sheet</button>
+      <button class="tab" role="tab" id="tab-inv" aria-selected="false" aria-controls="p-inv">Invitees</button>
+      <button class="tab" role="tab" id="tab-ven" aria-selected="false" aria-controls="p-ven">Venues</button>
+    </div>
+    <span class="spacer"></span>
+    <span class="saveNote" id="saveNote"></span>
+    <button class="act" id="btnJsonIn">Load file</button>
+    <button class="act" id="btnJson">Save file</button>
+    <button class="act" id="btnCsv">Invitees CSV</button>
+    <button class="act key" id="btnIcs">Calendar (.ics)</button>
+    <input type="file" id="fileIn" accept="application/json" hidden>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <section class="panel" id="p-run" role="tabpanel" aria-labelledby="tab-run">
+    <section class="travel" id="travel"></section>
+    <div class="q">
+      <h3>Still to resolve before this goes out</h3>
+      <ul>
+        <li>Wednesday: CBRE is circled with an arrow to Thursday. Held as Wednesday optional until you confirm the move.</li>
+        <li>Tuesday now runs Ararat at 8am, Ballarat lunch, Hatch at 4.30pm and the Baijiu dinner — a long day with two hours of driving in the middle.</li>
+        <li>Daniel in the visiting party needs a surname and company. George and Serge need contact details.</li>
+        <li>Kelvin is off Monday's 9pm dinner, since the sheet names only Ken and Leonard for it. Tick him on if that's wrong.</li>
+        <li>No one has a phone number yet, which is what the call round needs.</li>
+      </ul>
+    </div>
+    <div id="days"></div>
+  </section>
+
+  <section class="panel" id="p-inv" role="tabpanel" aria-labelledby="tab-inv" hidden>
+    <div class="filters">
+      <input type="search" id="fSearch" placeholder="Search name or company">
+      <select id="fGroup"><option value="">All groups</option></select>
+      <select id="fOwner"><option value="">All owners</option></select>
+      <select id="fRsvp"><option value="">All call states</option></select>
+      <button class="act" id="btnAddRow">Add person</button>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>First name</th><th>Surname</th><th>Company</th><th>Role</th>
+          <th>Email</th><th>Mobile</th><th>Arrives</th><th>Departs</th><th>Group</th><th>Owner</th>
+          <th>Source</th><th>Attending</th><th>Call status</th><th>Dietary</th><th>Notes</th><th></th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="p-ven" role="tabpanel" aria-labelledby="tab-ven" hidden>
+    <h2 class="sec">Options considered, and where each one landed</h2>
+    <div class="vgrid" id="venues"></div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  Working document for Onur, Mark and Daniel. Edits live in this browser tab only. Use <b>Save file</b> to keep them and <b>Load file</b> to pick up someone else’s version — two people editing at once will not merge.
+</footer>
+
+<script>
+const OFFSET_H = 10;          // AEST = UTC+10 (pre-daylight-saving)
+const SG_DIFF  = -2;          // Singapore clock vs Melbourne clock
+const KEY = "s37_delegation_2026_09";
+
+const DAYS = [
+  {d:20, dow:"Sunday"},   {d:21, dow:"Monday"},  {d:22, dow:"Tuesday"},
+  {d:23, dow:"Wednesday"},{d:24, dow:"Thursday"},{d:25, dow:"Friday"}
+];
+
+let state = {
+  sessions: [
+    {id:"s1", day:20, start:"19:00", end:"22:00", title:"Dinner — George hosting Ken", venue:"George to choose",
+     owner:"George", status:"tentative", who:[], notes:"George (Gee) is taking Ken out. Left as a private dinner — no one else on it unless you say otherwise."},
+
+    {id:"s2", day:21, start:"10:00", end:"15:00", title:"Property tour", venue:"Peninsula, or Bayside and Toorak",
+     owner:"Mark", status:"tentative", who:[], notes:"Route not yet chosen — the two options are a Peninsula run or a Bayside/Toorak loop."},
+    {id:"s3", day:21, start:"21:00", end:"22:45", title:"Dinner", venue:"Cumulus Inc, 45 Flinders Lane",
+     owner:"Daniel", status:"confirmed", who:[], notes:""},
+    {id:"s4", day:21, start:"23:00", end:"00:30", title:"Cigar bar", venue:"Siglo, 161 Spring Street",
+     owner:"Mark", status:"tentative", who:[], notes:""},
+
+    {id:"s5", day:22, start:"08:00", end:"12:30", title:"Ararat site visit", venue:"21 Geelong Road, Ararat",
+     owner:"Mark", status:"confirmed", who:[], notes:"8am departure from Melbourne."},
+    {id:"s6", day:22, start:"13:00", end:"15:00", title:"Ballarat lunch", venue:"Ballarat — venue to confirm",
+     owner:"Daniel", status:"tentative", who:[], notes:"Invite Tim and Phuong (Ararat Rural City Council), Tom and Viv."},
+    {id:"s7", day:22, start:"19:30", end:"22:00", title:"Baijiu dinner", venue:"Silks, Crown Melbourne",
+     owner:"Daniel", status:"tentative", who:[], notes:"One further note on the page is illegible."},
+
+    {id:"s8", day:22, start:"16:30", end:"17:00", title:"Hatch office meeting", venue:"Hatch offices",
+     owner:"Mark", status:"confirmed", who:[], notes:""},
+    {id:"s9", day:23, start:"12:00", end:"13:30", title:"CBRE office meeting", venue:"CBRE, Melbourne",
+     owner:"Mark", status:"optional", who:[], notes:"Circled on the running sheet with an arrow to Thursday — may move."},
+    {id:"s10", day:23, start:"14:00", end:"18:00", title:"Presentations — four 30-minute slots", venue:"Grand Hyatt Melbourne",
+     owner:"Onur", status:"confirmed", who:[], notes:"Property, Windrock (Dennis Sadik, bringing one guest), Merliance, and Serge Fikir of Property AU. Hard finish 6pm."},
+    {id:"s11", day:23, start:"19:00", end:"22:30", title:"Olujo event", venue:"Reine & La Rue, 100 Queen Street",
+     owner:"Mark", status:"confirmed", who:[], notes:"7pm start."},
+
+    {id:"s12", day:24, start:"10:00", end:"11:30", title:"Ararat connection session", venue:"To confirm",
+     owner:"Daniel", status:"optional", who:[], notes:"Marked optional on the running sheet."},
+    {id:"s13", day:24, start:"14:00", end:"15:30", title:"Debrief", venue:"To confirm",
+     owner:"Onur", status:"confirmed", who:[], notes:""},
+    {id:"s14", day:24, start:"19:00", end:"21:30", title:"Casual dinner", venue:"To confirm",
+     owner:"Mark", status:"tentative", who:[], notes:""}
+  ],
+
+  people: [
+    p("Kelvin","Leong","Merliance Capital","CEO","","","Singapore delegation","Mark","Paper list",["s2","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14"],"Called","","Not in Verdant CRM — needs a record."),
+    p("Kel","","","","","","Melbourne","Mark","Paper list",[],"Not called","","Melbourne contact, separate from Kelvin Leong. Details needed."),
+    p("Omran","Dib","Bluearth","Director","","","Melbourne","Onur","Paper list",[],"Not called","","Construction company. High net worth."),
+    p("Ashley","Carey","Spice","","","","Melbourne","Daniel","Paper list",[],"Not called","","Plus three guests."),
+    p("Laszlo","Konya","Nine Dots Legal","Legal Principal","laszlo.konya@ndl.legal","","Local partner","Daniel","Paper list",[],"Not called","","Listed as NDL Legal in Verdant CRM."),
+    p("Joe","","MYM Timber","Director","","","Local partner","Daniel","Paper list",["s4"],"Not called","",""),
+    p("Fatih","","Stone Ambassador","Director","","","Local partner","Daniel","Paper list",[],"Not called","",""),
+    p("Chris","","","","","","Local partner","Daniel","Paper list",[],"Not called","","Labour hire. High net worth."),
+    p("Dennis","Sadik","Windrock","Director","","","Investor","Daniel","Paper list",["s10"],"Not called","","Presenting Wednesday. Will bring one guest."),
+    p("Silvio","Colaluca","BDO","M&A","","","Local partner","Daniel","Paper list",[],"Not called","",""),
+    p("David","Wertiger","","","","","Local partner","Mark","Paper list",[],"Not called","","Spelling to confirm."),
+    p("Alex","Paykin","RND360","","","","Local partner","Mark","Paper list",[],"Not called","","RnDo 360 in Verdant CRM; no email on file."),
+    p("Lee","Holdsworth","CBRE","","","","Advisor","Mark","Paper list",["s9"],"Not called","",""),
+    p("Cameron","Dash","Hatch","Town planner","cameron.dash@hatch.com","","Advisor","Mark","CRM",["s8"],"Not called","","In Verdant CRM."),
+    p("Joe","","Designer Doorware","","","","Local partner","Daniel","Paper list",[],"Not called","",""),
+    p("Giustino","Salvalaggio","QBM","","","","Local partner","Mark","Paper list",[],"Not called","","Accountant/Advisory"),
+    p("Tony","Sass","Oreanna","","","","Local partner","Onur","Paper list",[],"Not called","",""),
+    p("Mert","Yaman","Algomert","","","","Local partner","Onur","Paper list",[],"Not called","",""),
+    p("Ken","Zeng","Watertree Pte Ltd","","kenzengzc@gmail.com","","Singapore delegation","Mark","Roadshow + schedule",["s1","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14"],"Confirmed","","Attends every day on the running sheet."),
+    p("Leonard","Chu","Lioner","","","","Singapore delegation","Mark","Schedule",["s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14"],"Confirmed","",""),
+    p("Danial","Korea","","","","","Singapore delegation","Mark","Roadshow",["s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14"],"Confirmed","","Surname recorded as Korea as a placeholder. This is the \"Daniel\" on the running sheet, not Daniel Savic."),
+    p("Amber","","Hong Kong Business Association","","","","Local partner","Daniel","Schedule",["s7"],"Not called","","Host or guest at the Baijiu dinner?"),
+    p("Tim","Harrison","Ararat Rural City Council","","tharrison@ararat.vic.gov.au","","Government","Daniel","CRM",["s6"],"Not called","",""),
+    p("Phuong","Au","Ararat Rural City Council","","pau@ararat.vic.gov.au","","Government","Daniel","CRM",["s6"],"Not called","",""),
+    p("Viv","Murphy","Invest Victoria","","","","Government","Daniel","Schedule",["s6"],"Not called","",""),
+    p("Tom","","Invest Victoria","","","","Government","Daniel","Schedule",["s6"],"Not called","","Surname needed."),
+    p("George","","","","","","Melbourne","—","Added later",["s1"],"Confirmed","","Known as Gee. Hosting Ken on Sunday night."),
+    p("Serge","Fikir","Property AU","","","","Local partner","—","Added later",["s10"],"Called","","Presenting in the fourth Wednesday slot."),
+    p("Mark","Milanese","Sector 37","Co-director","mark@educelabs.com","","Internal","—","Internal",["s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14"],"Confirmed","",""),
+    p("Daniel","Savic","Sector 37","Co-director","daniel@comden.com.au","","Internal","—","Internal",["s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14"],"Confirmed","",""),
+    p("Onur","Karauzum","Blackgrape Accounting","Co-director","onur@blackgrape.net.au","","Internal","—","Internal",["s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14"],"Confirmed","","")
+  ],
+
+  venues: [
+    {name:"Hatch office", note:"Engineering partner — office meeting", slot:"s8"},
+    {name:"CBRE office", note:"Office meeting", slot:"s9"},
+    {name:"Reine & La Rue", note:"Olujo event, 7pm start", slot:"s11"},
+    {name:"Siglo", note:"Cigar bar above Grossi Florentino", slot:"s4"},
+    {name:"Silks / Baijiu", note:"Chinese dinner event", slot:"s7"},
+    {name:"Peninsula", note:"Full-day option for the property tour", slot:"s2"},
+    {name:"Real estate drive", note:"Bayside and Toorak alternative to the Peninsula day", slot:"s2"},
+    {name:"Cumulus Inc", note:"Late dinner, 9pm", slot:"s3"}
+  ]
+};
+
+const RSVP_MAP = {"Not contacted":"Not called","Invited":"Called","Accepted":"Confirmed"};
+function migrate(v){ (v.people||[]).forEach(x=>{ if(RSVP_MAP[x.rsvp]) x.rsvp = RSVP_MAP[x.rsvp]; if(x.arrive===undefined) x.arrive=""; if(x.depart===undefined) x.depart=""; }); return v; }
+function p(first,last,co,role,email,mobile,group,owner,source,sessions,rsvp,diet,notes,arrive,depart){
+  return {id:"p"+(p.n=(p.n||0)+1), first,last,co,role,email,mobile,group,owner,source,
+          sessions:sessions||[], rsvp:rsvp||"Not called", diet:diet||"", notes:notes||"",
+          arrive:arrive||"", depart:depart||""};
+}
+
+const GROUPS = ["Singapore delegation","Melbourne","Investor","Advisor","Government","Local partner","Internal"];
+const OWNERS = ["Mark","Daniel","Onur","Mark / Daniel","Onur / Mark","—"];
+const SOURCES = ["Paper list","Roadshow","CRM","Schedule","Roadshow + schedule","Internal","Added later"];
+const RSVPS  = ["Not called","Called","Confirmed","Declined","Tentative"];
+const STATUSES = ["confirmed","tentative","optional"];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const sessById = id => state.sessions.find(s=>s.id===id);
+const daySessions = d => state.sessions.filter(s=>s.day===d).sort((a,b)=>a.start.localeCompare(b.start));
+
+function sgTime(t){
+  if(!/^\d{2}:\d{2}$/.test(t)) return "";
+  let [h,m] = t.split(":").map(Number);
+  h = (h + SG_DIFF + 24) % 24;
+  return String(h).padStart(2,"0")+":"+m.toString().padStart(2,"0");
+}
+
+/* ---------------- day strip ---------------- */
+function renderStrip(){
+  $("#strip").innerHTML = DAYS.map(d=>{
+    const n = daySessions(d.d).length;
+    const bars = Array.from({length:4},(_,i)=>`<i class="${i<n?"on":""}"></i>`).join("");
+    return `<button data-day="${d.d}" class="${n?"":"empty"}" aria-current="false">
+      <span class="dow">${d.dow.slice(0,3)}</span>
+      <span class="num">${d.d}</span>
+      <span class="load">${bars}</span>
+    </button>`;
+  }).join("");
+  $("#strip").querySelectorAll("button").forEach(b=>{
+    b.onclick = () => {
+      showTab("run");
+      const el = document.getElementById("day-"+b.dataset.day);
+      el && el.scrollIntoView({behavior:"smooth", block:"start"});
+      $("#strip").querySelectorAll("button").forEach(x=>x.setAttribute("aria-current","false"));
+      b.setAttribute("aria-current","true");
+    };
+  });
+}
+
+/* ---------------- running sheet ---------------- */
+function renderDays(){
+  $("#days").innerHTML = DAYS.map(d=>{
+    const ss = daySessions(d.d);
+    const body = ss.length ? ss.map(s=>slotHtml(s)).join("")
+      : `<div class="nofix">No programme. Marked “null” on the running sheet — departures day.</div>`;
+    return `<section class="day" id="day-${d.d}">
+      <div class="head"><span class="num">${d.d}</span><span class="dow">${d.dow}</span>
+        <span class="tag">${ss.length?ss.length+(ss.length===1?" item":" items"):"clear"}</span></div>
+      ${body}
+    </section>`;
+  }).join("");
+  bindSlots();
+}
+
+function slotHtml(s){
+  const chips = s.who.length
+    ? s.who.map(w=>`<span class="chip">${esc(w)}</span>`).join("")
+    : `<span class="chip none">no one named yet</span>`;
+  const auto = state.people.filter(pp=>pp.sessions.includes(s.id))
+                 .map(pp=>`<span class="chip sg">${esc((pp.first+" "+pp.last).trim()||pp.co)}</span>`).join("");
+  return `<div class="slot" data-id="${s.id}">
+    <div class="when">
+      <input class="f-start" value="${esc(s.start)}" aria-label="Start time" size="5">
+      <div class="sg">SG ${sgTime(s.start)}</div>
+    </div>
+    <div class="what">
+      <div class="title">
+        <input class="t f-title" value="${esc(s.title)}" aria-label="Session">
+        <span class="status ${s.status}"><select class="f-status" aria-label="Status">
+          ${STATUSES.map(x=>`<option ${x===s.status?"selected":""}>${x}</option>`).join("")}
+        </select></span>
+      </div>
+      <div class="meta">
+        <label>Venue</label><input class="m f-venue" value="${esc(s.venue)}" aria-label="Venue">
+        <label>Ends</label><input class="m f-end" value="${esc(s.end)}" style="min-width:60px" aria-label="End time">
+        <label>Lead</label><input class="m f-owner" value="${esc(s.owner)}" style="min-width:80px" aria-label="Lead">
+      </div>
+      <div class="who">${auto}${chips}</div>
+      ${s.notes?`<div class="note">${esc(s.notes)}</div>`:""}
+    </div>
+  </div>`;
+}
+
+function bindSlots(){
+  document.querySelectorAll(".slot").forEach(el=>{
+    const s = sessById(el.dataset.id);
+    const map = {".f-start":"start",".f-end":"end",".f-title":"title",".f-venue":"venue",".f-owner":"owner"};
+    Object.entries(map).forEach(([sel,key])=>{
+      const i = el.querySelector(sel);
+      i.oninput = () => { s[key] = i.value; touched(); if(key==="start") el.querySelector(".sg").textContent = "SG "+sgTime(i.value); };
+    });
+    const st = el.querySelector(".f-status");
+    st.onchange = () => { s.status = st.value; st.parentElement.className = "status "+s.status; touched(); };
+  });
+}
+
+/* ---------------- invitees ---------------- */
+function renderTable(){
+  const q = $("#fSearch").value.trim().toLowerCase();
+  const g = $("#fGroup").value, o = $("#fOwner").value, r = $("#fRsvp").value;
+  const rows = state.people.filter(x=>{
+    const hay = (x.first+" "+x.last+" "+x.co).toLowerCase();
+    return (!q || hay.includes(q)) && (!g || x.group===g) && (!o || x.owner===o) && (!r || x.rsvp===r);
+  });
+  $("#count").textContent = rows.length + " of " + state.people.length + " shown · "
+    + state.people.filter(x=>!x.mobile).length + " without a phone number";
+  $("#tbody").innerHTML = rows.map(x=>rowHtml(x)).join("");
+  bindRows();
+}
+
+function opts(list, val){ return list.map(o=>`<option ${o===val?"selected":""}>${esc(o)}</option>`).join(""); }
+
+function rowHtml(x){
+  const boxes = state.sessions.map(s=>{
+    const d = DAYS.find(dd=>dd.d===s.day);
+    return `<label><input type="checkbox" data-s="${s.id}" ${x.sessions.includes(s.id)?"checked":""}>
+      <span>${d.dow.slice(0,3)} ${s.day} · ${esc(s.title)}</span></label>`;
+  }).join("");
+  const n = x.sessions.length;
+  return `<tr data-id="${x.id}">
+    <td><input class="c-first" value="${esc(x.first)}" placeholder="—"></td>
+    <td><input class="c-last" value="${esc(x.last)}" placeholder="—"></td>
+    <td><input class="c-co" value="${esc(x.co)}" placeholder="—"></td>
+    <td><input class="c-role" value="${esc(x.role)}" placeholder="—"></td>
+    <td><input class="c-email" value="${esc(x.email)}" placeholder="needed"></td>
+    <td><input class="c-mobile" value="${esc(x.mobile)}" placeholder="—"></td>
+    <td><input class="c-arrive" value="${esc(x.arrive||"")}" placeholder="${x.group==="Singapore delegation"?"Sat 19, 21:40 SQ237":"—"}"></td>
+    <td><input class="c-depart" value="${esc(x.depart||"")}" placeholder="${x.group==="Singapore delegation"?"Fri 25, 10:15 SQ238":"—"}"></td>
+    <td><select class="c-group">${opts(GROUPS,x.group)}</select></td>
+    <td><select class="c-owner">${opts(OWNERS,x.owner)}</select></td>
+    <td><select class="c-source">${opts(SOURCES,x.source)}</select></td>
+    <td class="sessions"><details class="sess"><summary>${n?n+" session"+(n===1?"":"s"):"none yet"}</summary>
+      <div class="list">${boxes}</div></details></td>
+    <td><select class="c-rsvp rsvp-${x.rsvp.toLowerCase().replace(/\s/g,"")}">${opts(RSVPS,x.rsvp)}</select></td>
+    <td><input class="c-diet" value="${esc(x.diet)}" placeholder="—"></td>
+    <td><input class="c-notes" value="${esc(x.notes)}" placeholder="—"></td>
+    <td><button class="rowdel" title="Remove this person" aria-label="Remove">×</button></td>
+  </tr>`;
+}
+
+function bindRows(){
+  $("#tbody").querySelectorAll("tr").forEach(tr=>{
+    const x = state.people.find(pp=>pp.id===tr.dataset.id);
+    const map = {".c-first":"first",".c-last":"last",".c-co":"co",".c-role":"role",".c-email":"email",
+                 ".c-mobile":"mobile",".c-arrive":"arrive",".c-depart":"depart",".c-group":"group",".c-owner":"owner",".c-source":"source",
+                 ".c-rsvp":"rsvp",".c-diet":"diet",".c-notes":"notes"};
+    Object.entries(map).forEach(([sel,key])=>{
+      const el = tr.querySelector(sel);
+      el.oninput = el.onchange = () => {
+        x[key] = el.value; touched();
+        if(key==="rsvp"){ el.className = "c-rsvp rsvp-"+el.value.toLowerCase().replace(/\s/g,""); }
+        if(key==="first"||key==="last"||key==="co") renderDays();
+        if(key==="arrive"||key==="depart"||key==="group") renderTravel();
+      };
+    });
+    tr.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+      cb.onchange = () => {
+        const id = cb.dataset.s;
+        x.sessions = cb.checked ? [...new Set([...x.sessions,id])] : x.sessions.filter(v=>v!==id);
+        tr.querySelector("summary").textContent = x.sessions.length
+          ? x.sessions.length+" session"+(x.sessions.length===1?"":"s") : "none yet";
+        renderDays(); touched();
+      };
+    });
+    tr.querySelector(".rowdel").onclick = () => {
+      const nm = (x.first+" "+x.last).trim() || x.co || "this row";
+      if(confirm("Remove "+nm+" from the invitee list?")){
+        state.people = state.people.filter(pp=>pp.id!==x.id);
+        renderTable(); renderDays(); renderTravel(); touched();
+      }
+    };
+  });
+}
+
+/* ---------------- arrivals and departures ---------------- */
+function renderTravel(){
+  const v = state.people.filter(x=>x.group==="Singapore delegation");
+  if(!v.length){ $("#travel").innerHTML = ""; return; }
+  const anyBlank = v.some(x=>!x.arrive || !x.depart);
+  $("#travel").innerHTML = `<h3>Arrivals and departures</h3>
+    <table><thead><tr><th>Guest</th><th>Arrives</th><th>Departs</th></tr></thead><tbody>
+    ${v.map(x=>`<tr>
+      <td><span class="nm">${esc((x.first+" "+x.last).trim())}</span>
+          ${x.co?`<span class="co"> \u00b7 ${esc(x.co)}</span>`:""}</td>
+      <td>${x.arrive?esc(x.arrive):`<span class="tbd">not known</span>`}</td>
+      <td>${x.depart?esc(x.depart):`<span class="tbd">not known</span>`}</td>
+    </tr>`).join("")}
+    </tbody></table>
+    ${anyBlank?`<div class="hint">Fill these in on the Invitees tab \u2014 the Arrives and Departs columns sit next to Mobile. Flight number and terminal help if someone is being collected.</div>`:""}`;
+}
+
+/* ---------------- venues ---------------- */
+function renderVenues(){
+  $("#venues").innerHTML = state.venues.map(v=>{
+    const s = v.slot && sessById(v.slot);
+    const d = s && DAYS.find(dd=>dd.d===s.day);
+    return `<div class="vcard"><h3>${esc(v.name)}</h3><p>${esc(v.note)}</p>
+      ${s?`<div class="used">${d.dow} ${s.day}, ${esc(s.start)} — ${esc(s.title)}</div>`
+         :`<div class="unused">Not scheduled</div>`}</div>`;
+  }).join("");
+}
+
+/* ---------------- exports ---------------- */
+function download(name, text, mime){
+  const b = new Blob([text], {type:mime});
+  const u = URL.createObjectURL(b);
+  const a = document.createElement("a");
+  a.href = u; a.download = name; document.body.appendChild(a); a.click();
+  a.remove(); setTimeout(()=>URL.revokeObjectURL(u), 1500);
+}
+
+function csv(){
+  const head = ["First name","Surname","Company","Role","Email","Mobile","Arrives","Departs","Group","Call owner","Source","Sessions","Call status","Dietary","Notes"];
+  const q = v => `"${String(v??"").replace(/"/g,'""')}"`;
+  const lines = [head.map(q).join(",")];
+  state.people.forEach(x=>{
+    const ses = x.sessions.map(id=>{const s=sessById(id); return s?`${s.day} ${s.title}`:""}).filter(Boolean).join("; ");
+    lines.push([x.first,x.last,x.co,x.role,x.email,x.mobile,x.arrive||"",x.depart||"",x.group,x.owner,x.source,ses,x.rsvp,x.diet,x.notes].map(q).join(","));
+  });
+  download("sector37-delegation-invitees.csv", lines.join("\r\n"), "text/csv");
+}
+
+function utc(day, hhmm, rollover){
+  const [h,m] = hhmm.split(":").map(Number);
+  const dt = new Date(Date.UTC(2026, 8, day, h - OFFSET_H, m));
+  if(rollover) dt.setUTCDate(dt.getUTCDate()+1);
+  return dt.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
+}
+
+function ics(){
+  const stamp = new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
+  const fold = s => s.replace(/\r?\n/g,"\\n");
+  const out = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Sector 37//Melbourne Delegation//EN","CALSCALE:GREGORIAN","METHOD:PUBLISH"];
+  state.sessions.forEach(s=>{
+    if(!/^\d{2}:\d{2}$/.test(s.start)) return;
+    const endsNextDay = /^\d{2}:\d{2}$/.test(s.end) && s.end < s.start;
+    const guests = state.people.filter(pp=>pp.sessions.includes(s.id))
+      .map(pp=>(pp.first+" "+pp.last).trim()||pp.co).concat(s.who);
+    const desc = [
+      s.notes,
+      guests.length ? "Attending: "+[...new Set(guests)].join(", ") : "",
+      s.owner ? "Lead: "+s.owner : "",
+      "Status: "+s.status,
+      "Singapore time: "+sgTime(s.start)
+    ].filter(Boolean).join("\n");
+    out.push("BEGIN:VEVENT",
+      "UID:"+s.id+"-s37-2026@sector37",
+      "DTSTAMP:"+stamp,
+      "DTSTART:"+utc(s.day, s.start),
+      "DTEND:"+utc(s.day, /^\d{2}:\d{2}$/.test(s.end)?s.end:s.start, endsNextDay),
+      "SUMMARY:"+fold((s.status==="optional"?"[Optional] ":"")+s.title),
+      "LOCATION:"+fold(s.venue),
+      "DESCRIPTION:"+fold(desc),
+      "STATUS:"+(s.status==="confirmed"?"CONFIRMED":"TENTATIVE"),
+      "END:VEVENT");
+  });
+  out.push("END:VCALENDAR");
+  download("sector37-delegation-sept2026.ics", out.join("\r\n"), "text/calendar");
+}
+
+/* ---------------- persistence ---------------- */
+let saveTimer;
+function touched(){
+  $("#saveNote").textContent = "Unsaved changes";
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(persist, 900);
+}
+async function persist(){
+  if(!(window.storage && window.storage.set)) { $("#saveNote").textContent = "Unsaved — use Save file"; return; }
+  try{ await window.storage.set(KEY, JSON.stringify(state)); $("#saveNote").textContent = "Saved"; }
+  catch(e){ $("#saveNote").textContent = "Unsaved — use Save file"; }
+}
+async function restore(){
+  if(!(window.storage && window.storage.get)) return;
+  try{
+    const r = await window.storage.get(KEY);
+    if(r && r.value){ const v = JSON.parse(r.value); if(v.sessions && v.people){ state = migrate(v); $("#saveNote").textContent="Restored"; } }
+  }catch(e){ /* nothing stored yet */ }
+}
+
+/* ---------------- tabs ---------------- */
+function showTab(which){
+  const ids = {run:"p-run", inv:"p-inv", ven:"p-ven"};
+  Object.entries(ids).forEach(([k,v])=>{
+    $("#"+v).hidden = (k!==which);
+    $("#tab-"+k).setAttribute("aria-selected", String(k===which));
+  });
+}
+
+/* ---------------- boot ---------------- */
+(async function init(){
+  await restore();
+  $("#fGroup").innerHTML += GROUPS.map(g=>`<option>${g}</option>`).join("");
+  $("#fOwner").innerHTML += OWNERS.map(o=>`<option>${o}</option>`).join("");
+  $("#fRsvp").innerHTML  += RSVPS.map(r=>`<option>${r}</option>`).join("");
+  renderStrip(); renderDays(); renderTable(); renderTravel(); renderVenues();
+
+  ["run","inv","ven"].forEach(k=>{ $("#tab-"+k).onclick = () => showTab(k); });
+  ["fSearch","fGroup","fOwner","fRsvp"].forEach(id=>{ $("#"+id).oninput = $("#"+id).onchange = renderTable; });
+
+  $("#btnAddRow").onclick = () => {
+    state.people.push(p("","","","","","","Local partner","—","Added later",[],"Not called","",""));
+    $("#fSearch").value=""; $("#fGroup").value=""; $("#fOwner").value=""; $("#fRsvp").value="";
+    renderTable(); touched();
+    const last = $("#tbody").lastElementChild; if(last){ last.scrollIntoView({block:"center"}); last.querySelector("input").focus(); }
+  };
+  $("#btnCsv").onclick = csv;
+  $("#btnIcs").onclick = ics;
+  $("#btnJson").onclick = () => download("sector37-delegation-data.json", JSON.stringify(state,null,2), "application/json");
+  $("#btnJsonIn").onclick = () => $("#fileIn").click();
+  $("#fileIn").onchange = e => {
+    const f = e.target.files[0]; if(!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      try{
+        const v = JSON.parse(rd.result);
+        if(!v.sessions || !v.people) throw new Error("wrong shape");
+        state = migrate(v); renderStrip(); renderDays(); renderTable(); renderTravel(); renderVenues(); persist();
+        $("#saveNote").textContent = "Loaded";
+      }catch(err){ alert("That file isn't a delegation plan export. Choose a file saved with the Save file button."); }
+    };
+    rd.readAsText(f);
+    e.target.value = "";
+  };
+})();
+</script>
+</body>
+</html>

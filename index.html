@@ -80,7 +80,10 @@ button.act:hover{border-color:var(--grid);color:var(--grid)}
 button.act:focus-visible{outline:2px solid var(--grid);outline-offset:1px}
 button.act.key{background:var(--ink);color:#EDF0EA;border-color:var(--ink)}
 button.act.key:hover{background:var(--grid);border-color:var(--grid);color:#fff}
-.saveNote{font-size:12px;color:var(--muted);min-width:120px}
+.saveNote{font-size:12px;font-weight:600;min-width:96px;padding:4px 10px;border-radius:99px;border:1px solid var(--rule);color:var(--muted);font-family:"Archivo",sans-serif}
+.saveNote.live{color:var(--confirmed);border-color:#B4D2C1;background:#EEF6F1}
+.saveNote.saving{color:var(--tentative);border-color:#EBD49A;background:#FCF6E6}
+.saveNote.offline{color:var(--alert);border-color:#E2BCB4;background:#FBEEEB}
 
 /* ---------- panels ---------- */
 main{padding:26px 0 80px}
@@ -294,13 +297,12 @@ footer{border-top:1px solid var(--rule-strong);padding:16px 0 40px;font-size:12.
 </main>
 
 <footer class="wrap">
-  Working document for Onur, Mark and Daniel. Edits live in this browser tab only. Use <b>Save file</b> to keep them and <b>Load file</b> to pick up someone else’s version — two people editing at once will not merge.
+  Shared between Onur, Mark and Daniel — edits save automatically and appear for the others within about fifteen seconds. <b>Save file</b> takes a backup copy.
 </footer>
 
 <script>
 const OFFSET_H = 10;          // AEST = UTC+10 (pre-daylight-saving)
 const SG_DIFF  = -2;          // Singapore clock vs Melbourne clock
-const KEY = "s37_delegation_2026_09";
 
 const DAYS = [
   {d:20, dow:"Sunday"},   {d:21, dow:"Monday"},  {d:22, dow:"Tuesday"},
@@ -487,10 +489,10 @@ function bindSlots(){
     const map = {".f-start":"start",".f-end":"end",".f-title":"title",".f-venue":"venue",".f-owner":"owner"};
     Object.entries(map).forEach(([sel,key])=>{
       const i = el.querySelector(sel);
-      i.oninput = () => { s[key] = i.value; touched(); if(key==="start") el.querySelector(".sg").textContent = "SG "+sgTime(i.value); };
+      i.oninput = () => { s[key] = i.value; dirtySessions.add(s.id); touched(); if(key==="start") el.querySelector(".sg").textContent = "SG "+sgTime(i.value); };
     });
     const st = el.querySelector(".f-status");
-    st.onchange = () => { s.status = st.value; st.parentElement.className = "status "+s.status; touched(); };
+    st.onchange = () => { s.status = st.value; st.parentElement.className = "status "+s.status; dirtySessions.add(s.id); touched(); };
   });
 }
 
@@ -547,7 +549,7 @@ function bindRows(){
     Object.entries(map).forEach(([sel,key])=>{
       const el = tr.querySelector(sel);
       el.oninput = el.onchange = () => {
-        x[key] = el.value; touched();
+        x[key] = el.value; dirtyPeople.add(x.id); touched();
         if(key==="rsvp"){ el.className = "c-rsvp rsvp-"+el.value.toLowerCase().replace(/\s/g,""); }
         if(key==="first"||key==="last"||key==="co") renderDays();
         if(key==="arrive"||key==="depart"||key==="group") renderTravel();
@@ -557,6 +559,7 @@ function bindRows(){
       cb.onchange = () => {
         const id = cb.dataset.s;
         x.sessions = cb.checked ? [...new Set([...x.sessions,id])] : x.sessions.filter(v=>v!==id);
+        dirtyPeople.add(x.id);
         tr.querySelector("summary").textContent = x.sessions.length
           ? x.sessions.length+" session"+(x.sessions.length===1?"":"s") : "none yet";
         renderDays(); touched();
@@ -565,7 +568,7 @@ function bindRows(){
     tr.querySelector(".rowdel").onclick = () => {
       const nm = (x.first+" "+x.last).trim() || x.co || "this row";
       if(confirm("Remove "+nm+" from the invitee list?")){
-        state.people = state.people.filter(pp=>pp.id!==x.id);
+        state.people = state.people.filter(pp=>pp.id!==x.id); deletedPeople.add(x.id);
         renderTable(); renderDays(); renderTravel(); touched();
       }
     };
@@ -658,24 +661,107 @@ function ics(){
   download("sector37-delegation-sept2026.ics", out.join("\r\n"), "text/calendar");
 }
 
-/* ---------------- persistence ---------------- */
-let saveTimer;
-function touched(){
-  $("#saveNote").textContent = "Unsaved changes";
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(persist, 900);
+/* ---------------- shared storage (Firestore) ---------------- */
+const FS_URL = "https://firestore.googleapis.com/v1/projects/sector37-crm/databases/(default)/documents/delegation/plan_2026_09";
+const FS_KEY = "AIzaSyCIXAVVO_hwiP4v9iqcRhhXni9iccE42OM";
+
+let dirtyPeople = new Set(), dirtySessions = new Set(), deletedPeople = new Set();
+let saveTimer, pollTimer, writing = false, pendingRemote = null;
+
+function badge(cls, text){ const n = $("#saveNote"); n.className = "saveNote " + cls; n.textContent = text; }
+
+async function fsGet(){
+  const r = await fetch(FS_URL + "?key=" + FS_KEY);
+  if(r.status === 404) return null;
+  if(!r.ok) throw new Error("read failed " + r.status);
+  const doc = await r.json();
+  if(doc.fields && doc.fields.payload && doc.fields.payload.stringValue)
+    return JSON.parse(doc.fields.payload.stringValue);
+  return null;
 }
-async function persist(){
-  if(!(window.storage && window.storage.set)) { $("#saveNote").textContent = "Unsaved — use Save file"; return; }
-  try{ await window.storage.set(KEY, JSON.stringify(state)); $("#saveNote").textContent = "Saved"; }
-  catch(e){ $("#saveNote").textContent = "Unsaved — use Save file"; }
+async function fsPut(payload){
+  const body = {fields:{payload:{stringValue:JSON.stringify(payload)},
+                        updatedAt:{timestampValue:new Date().toISOString()}}};
+  const r = await fetch(FS_URL + "?key=" + FS_KEY,
+    {method:"PATCH", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
+  if(!r.ok) throw new Error("write failed " + r.status);
 }
-async function restore(){
-  if(!(window.storage && window.storage.get)) return;
+
+function editingNow(){
+  const a = document.activeElement;
+  return !!(a && (a.tagName === "INPUT" || a.tagName === "SELECT" || a.tagName === "TEXTAREA"));
+}
+
+// merge only the records this browser changed over whatever is on the server
+function mergeInto(base){
+  dirtyPeople.forEach(id=>{
+    const local = state.people.find(x=>x.id===id); if(!local) return;
+    const i = base.people.findIndex(x=>x.id===id);
+    if(i >= 0) base.people[i] = local; else base.people.push(local);
+  });
+  deletedPeople.forEach(id=>{ base.people = base.people.filter(x=>x.id!==id); });
+  dirtySessions.forEach(id=>{
+    const local = state.sessions.find(x=>x.id===id); if(!local) return;
+    const i = base.sessions.findIndex(x=>x.id===id);
+    if(i >= 0) base.sessions[i] = local; else base.sessions.push(local);
+  });
+  return base;
+}
+
+function touched(){ badge("saving","Saving"); clearTimeout(saveTimer); saveTimer = setTimeout(flush, 1200); }
+
+async function flush(){
+  if(writing) { clearTimeout(saveTimer); saveTimer = setTimeout(flush, 1200); return; }
+  if(!dirtyPeople.size && !dirtySessions.size && !deletedPeople.size){ badge("live","Live"); return; }
+  writing = true;
   try{
-    const r = await window.storage.get(KEY);
-    if(r && r.value){ const v = JSON.parse(r.value); if(v.sessions && v.people){ state = migrate(v); $("#saveNote").textContent="Restored"; } }
-  }catch(e){ /* nothing stored yet */ }
+    let base = await fsGet();
+    if(!base || !base.people) base = JSON.parse(JSON.stringify(state));
+    else base = migrate(base);
+    base = mergeInto(base);
+    base.venues = state.venues;
+    await fsPut(base);
+    dirtyPeople.clear(); dirtySessions.clear(); deletedPeople.clear();
+    applyRemote(base);
+    badge("live","Live");
+  }catch(e){
+    badge("offline","Not saved");
+  }finally{ writing = false; }
+}
+
+function applyRemote(v){
+  if(editingNow()){ pendingRemote = v; return; }
+  pendingRemote = null;
+  const openTab = ["run","inv","ven"].find(k=>!$("#p-"+k).hidden) || "run";
+  state = v;
+  renderStrip(); renderDays(); renderTable(); renderTravel(); renderVenues();
+  showTab(openTab);
+}
+
+async function poll(){
+  if(writing || dirtyPeople.size || dirtySessions.size || deletedPeople.size) return;
+  try{
+    const v = await fsGet();
+    if(v && v.people){
+      const migrated = migrate(v);
+      if(JSON.stringify(migrated) !== JSON.stringify(state)) applyRemote(migrated);
+      badge("live","Live");
+    }
+  }catch(e){ badge("offline","Offline"); }
+}
+
+async function restore(){
+  badge("saving","Connecting");
+  try{
+    const v = await fsGet();
+    if(v && v.people){ state = migrate(v); badge("live","Live"); }
+    else { await fsPut(state); badge("live","Live"); }   // first run seeds the document
+  }catch(e){
+    badge("offline","Offline — local only");
+  }
+  clearInterval(pollTimer);
+  pollTimer = setInterval(poll, 15000);
+  document.addEventListener("focusout", ()=>{ if(pendingRemote) setTimeout(()=>{ if(pendingRemote) applyRemote(pendingRemote); }, 400); });
 }
 
 /* ---------------- tabs ---------------- */
@@ -699,7 +785,9 @@ function showTab(which){
   ["fSearch","fGroup","fOwner","fRsvp"].forEach(id=>{ $("#"+id).oninput = $("#"+id).onchange = renderTable; });
 
   $("#btnAddRow").onclick = () => {
-    state.people.push(p("","","","","","","Local partner","—","Added later",[],"Not called","",""));
+    const np = p("","","","","","","Local partner","—","Added later",[],"Not called","","");
+    np.id = "p_" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+    state.people.push(np); dirtyPeople.add(np.id);
     $("#fSearch").value=""; $("#fGroup").value=""; $("#fOwner").value=""; $("#fRsvp").value="";
     renderTable(); touched();
     const last = $("#tbody").lastElementChild; if(last){ last.scrollIntoView({block:"center"}); last.querySelector("input").focus(); }
@@ -715,7 +803,10 @@ function showTab(which){
       try{
         const v = JSON.parse(rd.result);
         if(!v.sessions || !v.people) throw new Error("wrong shape");
-        state = migrate(v); renderStrip(); renderDays(); renderTable(); renderTravel(); renderVenues(); persist();
+        state = migrate(v);
+        state.people.forEach(x=>dirtyPeople.add(x.id));
+        state.sessions.forEach(x=>dirtySessions.add(x.id));
+        renderStrip(); renderDays(); renderTable(); renderTravel(); renderVenues(); flush();
         $("#saveNote").textContent = "Loaded";
       }catch(err){ alert("That file isn't a delegation plan export. Choose a file saved with the Save file button."); }
     };

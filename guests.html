@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sector 37 — Your Melbourne programme, 20–25 September</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDF0EA; --surface:#FFFFFF; --ink:#15241B; --ink-soft:#3E5147;
+  --muted:#6E8074; --rule:#CFD8CB; --grid:#1F4E5F; --canola:#E3B23C;
+  --optional:#6E8074; --r:3px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Source Sans 3","Segoe UI",system-ui,sans-serif;font-size:16.5px;line-height:1.55}
+h1,h2,h3,.num,.t{font-family:"Archivo","Segoe UI",system-ui,sans-serif}
+.wrap{max-width:780px;margin:0 auto;padding:0 20px}
+
+header.mast{background:var(--ink);color:#EDF0EA;padding:34px 0 30px}
+.mast .eyebrow{font-family:"Archivo";font-size:12px;letter-spacing:.14em;color:var(--canola);margin:0 0 10px}
+.mast h1{font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:-.025em;margin:0 0 10px;line-height:1.08}
+.mast p{color:#A9BFB0;margin:0;max-width:56ch;font-size:15.5px}
+
+.tz{display:flex;gap:26px;margin-top:22px;padding-top:18px;border-top:1px solid #2F4537;flex-wrap:wrap}
+.tz div{font-size:13px;color:#8FA697}
+.tz b{display:block;font-family:"Archivo";font-size:15px;color:#EDF0EA;font-weight:600;margin-top:2px}
+
+main{padding:30px 0 60px}
+.intro{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:18px 22px;margin-bottom:26px;font-size:15.5px;color:var(--ink-soft)}
+.intro b{color:var(--ink)}
+
+.day{margin-bottom:30px}
+.day > h2{display:flex;align-items:baseline;gap:12px;margin:0 0 12px;padding-bottom:9px;border-bottom:2px solid var(--ink)}
+.day > h2 .num{font-size:30px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.day > h2 .dow{font-size:16px;font-weight:600;color:var(--ink-soft)}
+.day > h2 .mon{font-size:13px;color:var(--muted);margin-left:auto;font-family:"Source Sans 3"}
+
+.item{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);
+  padding:16px 20px;margin-bottom:9px;display:grid;grid-template-columns:96px 1fr;gap:18px}
+.item .time{border-right:1px solid var(--rule);padding-right:14px}
+.item .time .a{font-family:"Archivo";font-weight:700;font-size:17px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.item .time .b{font-size:12px;color:var(--muted);margin-top:3px;font-variant-numeric:tabular-nums}
+.item .t{font-size:18px;font-weight:600;letter-spacing:-.01em;margin:0 0 3px}
+.item .venue{font-size:15px;color:var(--ink-soft)}
+.item .note{font-size:14.5px;color:var(--muted);margin-top:7px}
+.item .with{margin-top:11px;padding-top:10px;border-top:1px dashed var(--rule);font-size:14px;color:var(--ink-soft)}
+.item .with span{color:var(--muted);font-size:12px;display:block;margin-bottom:3px;font-family:"Archivo";letter-spacing:.03em}
+.flag{display:inline-block;font-size:11.5px;font-weight:600;font-family:"Archivo";color:var(--optional);
+  border:1px solid var(--rule);border-radius:99px;padding:2px 9px;margin-left:8px;vertical-align:2px}
+.free{background:transparent;border:1px dashed var(--rule);color:var(--muted);font-style:italic;
+  border-radius:var(--r);padding:15px 20px;font-size:15px}
+
+.travel{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);margin-bottom:26px;overflow:hidden}
+.travel h2{margin:0;padding:13px 20px;font-size:13px;font-weight:600;color:var(--muted);
+  font-family:"Archivo";letter-spacing:.03em;border-bottom:1px solid var(--rule);background:#F6F8F4}
+.travel table{border-collapse:collapse;width:100%;font-size:15px}
+.travel td{padding:10px 20px;border-bottom:1px solid var(--rule)}
+.travel tr:last-child td{border-bottom:0}
+.travel .nm{font-weight:600;font-family:"Archivo"}
+.travel .tbd{color:#A9B7A7;font-style:italic}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 26px}
+button.act{all:unset;cursor:pointer;font-family:"Archivo";font-size:13.5px;font-weight:600;padding:9px 16px;
+  border-radius:var(--r);background:var(--ink);color:#EDF0EA}
+button.act:hover{background:var(--grid)}
+button.act:focus-visible{outline:2px solid var(--grid);outline-offset:2px}
+
+footer{border-top:1px solid var(--rule);padding:18px 0 46px;font-size:14px;color:var(--muted)}
+footer b{color:var(--ink-soft);font-weight:600}
+.status{font-size:12px;color:var(--muted);margin-top:8px}
+
+@media (max-width:640px){
+  .item{grid-template-columns:1fr;gap:9px}
+  .item .time{border-right:0;border-bottom:1px solid var(--rule);padding:0 0 8px;display:flex;gap:10px;align-items:baseline}
+  .item .time .b{margin-top:0}
+}
+@media print{
+  body{background:#fff}
+  .actions,footer .status{display:none}
+  .item,.day,.travel{break-inside:avoid}
+  header.mast{background:#fff;color:#000;border-bottom:2px solid #000}
+  .mast h1,.tz b{color:#000}.mast p,.tz div{color:#444}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <p class="eyebrow">SECTOR 37 · MELBOURNE</p>
+    <h1>Your programme<br>20 – 25 September 2026</h1>
+    <p id="forWhom">This page updates as arrangements are confirmed, so it is worth reopening rather than printing early.</p>
+    <div class="tz">
+      <div>Melbourne<b>AEST · UTC+10</b></div>
+      <div>Singapore<b>2 hours behind</b></div>
+      <div>Ararat site<b>2 hrs from the city</b></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="intro">
+    Times shown in <b>Melbourne time first</b>, Singapore time beneath. Daylight saving does not begin in Victoria until 4 October, so the gap stays at two hours for the whole visit. Anything marked <b>optional</b> is yours to skip.
+  </div>
+
+  <div class="actions">
+    <button class="act" id="btnIcs">Add to your calendar</button>
+    <button class="act" id="btnPrint">Print</button>
+  </div>
+
+  <section class="travel" id="travel"></section>
+  <div id="days"></div>
+</main>
+
+<footer class="wrap">
+  Questions while you are here — <b>Onur Karauzum</b>, <b>Mark Milanese</b> or <b>Daniel Savic</b>.
+  <div class="status" id="status">Loading the latest version…</div>
+</footer>
+
+<script>
+const FS_URL = "https://firestore.googleapis.com/v1/projects/sector37-crm/databases/(default)/documents/delegation/plan_2026_09";
+const FS_KEY = "AIzaSyCIXAVVO_hwiP4v9iqcRhhXni9iccE42OM";
+const OFFSET_H = 10, SG_DIFF = -2;
+const DAYS = [{d:20,dow:"Sunday"},{d:21,dow:"Monday"},{d:22,dow:"Tuesday"},
+              {d:23,dow:"Wednesday"},{d:24,dow:"Thursday"},{d:25,dow:"Friday"}];
+let VISITORS = [];   // filled from the delegation group once the data loads
+let data = null;
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function sgTime(t){
+  if(!/^\d{2}:\d{2}$/.test(t)) return "";
+  let [h,m]=t.split(":").map(Number);
+  h=(h+SG_DIFF+24)%24;
+  return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");
+}
+function pretty(t){
+  if(!/^\d{2}:\d{2}$/.test(t)) return t||"";
+  let [h,m]=t.split(":").map(Number);
+  const ap = h<12 ? "am":"pm"; let hh = h%12; if(hh===0) hh=12;
+  return hh + (m? ":"+String(m).padStart(2,"0") : "") + ap;
+}
+function fullName(p){ return (p.first+" "+p.last).trim() || p.co || ""; }
+
+// guests only ever see people who have actually been invited or confirmed
+function guestsFor(sid){
+  return (data.people||[])
+    .filter(p => p.sessions && p.sessions.includes(sid))
+    .filter(p => ["Called","Confirmed","Tentative"].includes(p.rsvp))
+    .filter(p => !VISITORS.includes(p.first))
+    .map(p => fullName(p) + (p.co ? " (" + p.co + ")" : ""))
+    .filter(Boolean);
+}
+
+function render(){
+  const visitors = (data.people||[]).filter(p=>p.group==="Singapore delegation");
+  VISITORS = visitors.map(p=>p.first).filter(Boolean);
+  if(visitors.length){
+    const names = visitors.map(p=>p.first).filter(Boolean);
+    const list = names.length>1 ? names.slice(0,-1).join(", ")+" and "+names[names.length-1] : names[0];
+    $("#forWhom").innerHTML = "Prepared for "+esc(list)+
+      ". This page updates as arrangements are confirmed, so it is worth reopening rather than printing early.";
+  }
+  if(visitors.length){
+    $("#travel").innerHTML = `<h2>Your flights</h2><table><tbody>${visitors.map(p=>`
+      <tr><td class="nm">${esc(fullName(p))}</td>
+          <td>${p.arrive?esc(p.arrive):`<span class="tbd">arrival to confirm</span>`}</td>
+          <td>${p.depart?esc(p.depart):`<span class="tbd">departure to confirm</span>`}</td></tr>`).join("")}
+      </tbody></table>`;
+  } else $("#travel").innerHTML = "";
+
+  $("#days").innerHTML = DAYS.map(d=>{
+    const ss = (data.sessions||[]).filter(s=>s.day===d.d)
+                 .sort((a,b)=>String(a.start).localeCompare(String(b.start)));
+    const body = ss.length ? ss.map(s=>{
+      const with_ = guestsFor(s.id);
+      return `<div class="item">
+        <div class="time"><div class="a">${esc(pretty(s.start))}</div><div class="b">SG ${esc(sgTime(s.start))}</div></div>
+        <div>
+          <p class="t">${esc(s.title)}${s.status==="optional"?`<span class="flag">optional</span>`:""}</p>
+          <div class="venue">${esc(s.venue||"Venue to be confirmed")}</div>
+          ${with_.length?`<div class="with"><span>JOINING YOU</span>${esc(with_.join(" · "))}</div>`:""}
+        </div></div>`;
+    }).join("") : `<div class="free">No fixed programme — the day is yours.</div>`;
+    return `<section class="day"><h2><span class="num">${d.d}</span>
+      <span class="dow">${d.dow}</span><span class="mon">September</span></h2>${body}</section>`;
+  }).join("");
+}
+
+function utc(day,hhmm){
+  const [h,m]=hhmm.split(":").map(Number);
+  return new Date(Date.UTC(2026,8,day,h-OFFSET_H,m)).toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
+}
+function ics(){
+  const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
+  const out=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Sector 37//Delegation//EN","CALSCALE:GREGORIAN","METHOD:PUBLISH"];
+  (data.sessions||[]).forEach(s=>{
+    if(!/^\d{2}:\d{2}$/.test(s.start)) return;
+    const endsNext = /^\d{2}:\d{2}$/.test(s.end) && s.end < s.start;
+    const dt = new Date(Date.UTC(2026,8,s.day,Number(s.end.slice(0,2))-OFFSET_H,Number(s.end.slice(3))));
+    if(endsNext) dt.setUTCDate(dt.getUTCDate()+1);
+    out.push("BEGIN:VEVENT","UID:g-"+s.id+"-s37@sector37","DTSTAMP:"+stamp,
+      "DTSTART:"+utc(s.day,s.start),
+      "DTEND:"+(/^\d{2}:\d{2}$/.test(s.end)?dt.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,""):utc(s.day,s.start)),
+      "SUMMARY:"+(s.status==="optional"?"[Optional] ":"")+String(s.title).replace(/\r?\n/g,"\\n"),
+      "LOCATION:"+String(s.venue||"").replace(/\r?\n/g,"\\n"),
+      "DESCRIPTION:Singapore time "+sgTime(s.start),
+      "END:VEVENT");
+  });
+  out.push("END:VCALENDAR");
+  const b=new Blob([out.join("\r\n")],{type:"text/calendar"});
+  const u=URL.createObjectURL(b); const a=document.createElement("a");
+  a.href=u; a.download="melbourne-programme.ics"; document.body.appendChild(a); a.click();
+  a.remove(); setTimeout(()=>URL.revokeObjectURL(u),1500);
+}
+
+async function load(){
+  try{
+    const r = await fetch(FS_URL+"?key="+FS_KEY);
+    if(!r.ok) throw new Error(r.status);
+    const doc = await r.json();
+    if(!doc.fields || !doc.fields.payload) throw new Error("empty");
+    data = JSON.parse(doc.fields.payload.stringValue);
+    render();
+    const when = doc.fields.updatedAt && doc.fields.updatedAt.timestampValue;
+    $("#status").textContent = when
+      ? "Last updated " + new Date(when).toLocaleString("en-AU",{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"})
+      : "";
+  }catch(e){
+    $("#status").textContent = "Could not load the latest programme. Please refresh, or contact Onur.";
+  }
+}
+
+$("#btnIcs").onclick = () => data && ics();
+$("#btnPrint").onclick = () => window.print();
+load();
+setInterval(load, 60000);
+</script>
+</body>
+</html>

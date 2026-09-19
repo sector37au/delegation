@@ -97,7 +97,7 @@ footer b{color:var(--ink-soft);font-weight:600}
     <div class="tz">
       <div>Melbourne<b>AEST · UTC+10</b></div>
       <div>Singapore<b>2 hours behind</b></div>
-      <div>Ararat site<b>2 hrs from the city</b></div>
+      <div>Ararat site<b>2hrs from the CBD</b></div>
     </div>
   </div>
 </header>
@@ -127,7 +127,6 @@ const FS_KEY = "AIzaSyCIXAVVO_hwiP4v9iqcRhhXni9iccE42OM";
 const OFFSET_H = 10, SG_DIFF = -2;
 const DAYS = [{d:20,dow:"Sunday"},{d:21,dow:"Monday"},{d:22,dow:"Tuesday"},
               {d:23,dow:"Wednesday"},{d:24,dow:"Thursday"},{d:25,dow:"Friday"}];
-let VISITORS = [];   // filled from the delegation group once the data loads
 let data = null;
 
 const $ = s => document.querySelector(s);
@@ -147,19 +146,8 @@ function pretty(t){
 }
 function fullName(p){ return (p.first+" "+p.last).trim() || p.co || ""; }
 
-// guests only ever see people who have actually been invited or confirmed
-function guestsFor(sid){
-  return (data.people||[])
-    .filter(p => p.sessions && p.sessions.includes(sid))
-    .filter(p => ["Called","Confirmed","Tentative"].includes(p.rsvp))
-    .filter(p => !VISITORS.includes(p.first))
-    .map(p => fullName(p) + (p.co ? " (" + p.co + ")" : ""))
-    .filter(Boolean);
-}
-
 function render(){
   const visitors = (data.people||[]).filter(p=>p.group==="Singapore delegation");
-  VISITORS = visitors.map(p=>p.first).filter(Boolean);
   if(visitors.length){
     const names = visitors.map(p=>p.first).filter(Boolean);
     const list = names.length>1 ? names.slice(0,-1).join(", ")+" and "+names[names.length-1] : names[0];
@@ -178,13 +166,11 @@ function render(){
     const ss = (data.sessions||[]).filter(s=>s.day===d.d)
                  .sort((a,b)=>String(a.start).localeCompare(String(b.start)));
     const body = ss.length ? ss.map(s=>{
-      const with_ = guestsFor(s.id);
       return `<div class="item">
         <div class="time"><div class="a">${esc(pretty(s.start))}</div><div class="b">SG ${esc(sgTime(s.start))}</div></div>
         <div>
           <p class="t">${esc(s.title)}${s.status==="optional"?`<span class="flag">optional</span>`:""}</p>
           <div class="venue">${esc(s.venue||"Venue to be confirmed")}</div>
-          ${with_.length?`<div class="with"><span>JOINING YOU</span>${esc(with_.join(" · "))}</div>`:""}
         </div></div>`;
     }).join("") : `<div class="free">No fixed programme — the day is yours.</div>`;
     return `<section class="day"><h2><span class="num">${d.d}</span>
